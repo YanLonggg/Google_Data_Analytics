@@ -1,4 +1,6 @@
-# Google_Data_Analytics
+# Google_Data_Analytics_Case_Study
+This is my google data analystics case study 
+Feel free to email me about any questions: longyan734@gmail.com
 #Case Study: How Does a Bike-Share Navigate Speedy Success?
 
 ##Scenario
