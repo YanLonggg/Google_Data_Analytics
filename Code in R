@@ -172,6 +172,48 @@ all_trips_v2 %>%
   ggplot(aes(x = weekday, y = average_duration, fill = member_casual)) +
   geom_col(position = "dodge") + labs(title="Average Ride Duration by Members and Casuals Users per Weekday") +
   theme_classic()
+  
+# Bike Preference by User Type
+
+tabyl(all_trips, bike_type) %>%
+  adorn_pct_formatting(digits = 1)
+  
+ggplot(data = all_trips) + 
+  geom_bar(mapping = aes(x = bike_type, fill = bike_type)) +
+  xlab("Bike Type") + ylab("Number of Rides") +
+  labs(title = "Bike preference and rider_type",
+      subtitle= "June 2020 to May 2021",
+       fill = "Bike type") + scale_fill_viridis_d() + facet_grid(~rider_type)
+       
+# Number of rides commited by Month
+
+ggplot(data = all_trips) +
+  geom_bar(mapping = aes(x = ordered(rides_month,
+                                     levels = c("January", "February", "March", 
+                                                "April", "May", "June", "July",
+                                                "August", "September","October",
+                                                "November", "December")), 
+                         fill = rides_month)) +
+  xlab("Month") + ylab("Number of Rides") + 
+  labs(title = "Numbers of rides completed by month",
+                      subtitle= "September2020 to August 2021", 
+       fill = "Month") + facet_grid(~rider_type) + scale_fill_viridis_d()+
+       theme(axis.text.x=element_text(angle = 90))
+ 
+ # Number of rides (Member Vs. Casual)
+ 
+ all_trips_v2 %>%  
+  group_by(member_casual, month) %>% 
+  summarise(number_of_rides = n()
+            ,average_duration = mean(ride_length)) %>% 
+  arrange(member_casual, month)  %>% 
+  ggplot(aes(x = month, y = number_of_rides, fill = member_casual)) +
+  geom_col(position = "dodge") + labs(title = "Number of Rides: Casual vs Member") +
+  ylab("Number of Rides") +
+  xlab("Month") +
+  guides(fill=guide_legend(title="User Type"))
+ggsave("number_of _rides_vs_month.png") 
+
 
 counts <- aggregate(all_trips_v2$ride_length ~ all_trips_v2$ride_length + all_trips_v2$day_of_week, FUN = mean)
 write.csv(counts, file = 'C://Users//Long//Downloads/avg_ride_length.csv')
